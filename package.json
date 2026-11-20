@@ -1,0 +1,20 @@
+{
+  "name": "zai-quota-guard",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Monitors the z.ai GLM Coding Plan 5-hour token quota and auto-consumes soonest-expiring usable reset grants. Zero runtime dependencies, Node >= 18.",
+  "type": "module",
+  "bin": {
+    "zai-quota-guard": "index.js"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "start": "node index.js",
+    "once": "node index.js --once",
+    "check": "node --check index.js && node --check tests/run-tests.js && node --check tests/e2e-local.mjs",
+    "test": "node tests/run-tests.js && node tests/e2e-local.mjs"
+  },
+  "license": "MIT"
+}
