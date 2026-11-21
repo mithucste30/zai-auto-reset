@@ -54,6 +54,34 @@ Getting a token: open the z.ai console in a browser, grab the `Authorization:
 Bearer ...` header from any request to `api.z.ai` in devtools, and use the
 token value. Treat it like a password.
 
+## Docker
+
+Prebuilt multi-arch images (linux/amd64, linux/arm64) are published to GHCR on
+every push to `main` and on `v*` tags:
+
+```sh
+docker run -d --name zai-quota-guard --restart unless-stopped \
+  -e ZAI_TOKEN="your-bearer-token" \
+  ghcr.io/mithucste30/zai-auto-reset:latest
+```
+
+Or with compose (see `docker-compose.yml` and `.env.example`):
+
+```sh
+cp .env.example .env   # fill in ZAI_TOKEN
+docker compose up -d
+docker compose logs -f
+```
+
+To run from source instead of the registry image, comment out `image:` in
+`docker-compose.yml` and uncomment `build: .`. Image tags: `latest`,
+`<version>` / `<major>.<minor>` for `v*` git tags, and `sha-<commit>` for
+every build.
+
+Note: the script exits 1 when the token is rejected so the supervisor can
+restart it — with `--restart unless-stopped` a dead token means restart loops
+every few seconds; check `docker logs` if it looks flappy.
+
 ## Configuration reference
 
 Configuration is via environment variables; the token can also be passed as a

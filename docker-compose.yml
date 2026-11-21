@@ -1,0 +1,22 @@
+# Copy .env.example to .env (or edit below) and run: docker compose up -d
+services:
+  zai-quota-guard:
+    image: ghcr.io/mithucste30/zai-auto-reset:latest
+    # To run from source instead of the registry image, comment out `image` and use:
+    # build: .
+    restart: unless-stopped
+    environment:
+      # Required — Bearer token for api.z.ai (localStorage key
+      # "z-ai-open-platform-token-production" on z.ai).
+      ZAI_TOKEN: ${ZAI_TOKEN:?set ZAI_TOKEN in .env or the environment}
+      # Optional tuning — defaults shown; see README for the full list.
+      POLL_INTERVAL_SEC: "60"
+      THRESHOLD_PCT: "97"
+      EXPIRING_SOON_SEC: "120"
+      MIN_USAGE_PCT: "1"
+      # GRANT_TZ_OFFSET_MINUTES: "480"
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
