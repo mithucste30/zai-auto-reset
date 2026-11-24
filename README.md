@@ -3,7 +3,7 @@
 A standalone, zero-dependency Node.js monitor for the **z.ai GLM Coding Plan**.
 It watches the account's 5-hour token quota and the "reset quota" grants, and
 automatically consumes a grant when it makes sense — so grants never expire
-unused and you never hit the 97% wall mid-session.
+unused and you never hit the 93% wall mid-session.
 
 > **Unofficial tool.** It talks to the private `https://api.z.ai/api` endpoints
 > that the z.ai web console itself uses. Those endpoints can change without
@@ -18,7 +18,7 @@ Every poll cycle the script fetches the quota state and the grant list, logs a
 full status line, and evaluates two consume rules:
 
 1. **High-usage rule** — if the 5-hour usage percentage is `>= THRESHOLD_PCT`
-   (default 97) and at least one usable grant exists, it consumes the
+   (default 93) and at least one usable grant exists, it consumes the
    **soonest-expiring** usable grant.
 2. **Expiring-grant rule** — if usage is below the threshold but the
    soonest-expiring usable grant expires within `EXPIRING_SOON_SEC`
@@ -93,7 +93,7 @@ not silently fall back to defaults.
 | `ZAI_TOKEN` | `--token <t>` | (required) | Bearer token for `api.z.ai` |
 | `POLL_INTERVAL_SEC` | — | `60` | Seconds between polls (min 5) |
 | `EXPIRING_SOON_SEC` | — | `120` | Grant counts as "expiring soon" within this many seconds |
-| `THRESHOLD_PCT` | — | `97` | High-usage consume threshold, percentage |
+| `THRESHOLD_PCT` | — | `93` | High-usage consume threshold, percentage |
 | `MIN_USAGE_PCT` | — | `1` | Minimum usage for the expiring-grant rule (see below) |
 | `GRANT_TZ_OFFSET_MINUTES` | — | `480` | Offset of grant `expireTime` strings (480 = UTC+8, Asia/Shanghai) |
 | `FETCH_TIMEOUT_MS` | — | `15000` | Per-request timeout (AbortController) |
@@ -126,7 +126,7 @@ Plain text, ISO timestamps, no colors — log-file friendly. `[error]` and
 `[fatal]` go to stderr, everything else to stdout.
 
 ```
-2026-11-20T12:00:00.000Z [start] zai-quota-guard v1.0.0 pid=123 mode=monitor poll=60s threshold=97% expiringSoon=120s minUsage=1% grantTz=UTC+08:00 fetchTimeout=15000ms cooldown=90s token=***abcd
+2026-11-20T12:00:00.000Z [start] zai-quota-guard v1.0.0 pid=123 mode=monitor poll=60s threshold=93% expiringSoon=120s minUsage=1% grantTz=UTC+08:00 fetchTimeout=15000ms cooldown=90s token=***abcd
 2026-11-20T12:00:00.000Z [grant] recordId=2714920 grantType=DIRECT available=false usable=false expire=2026-11-17T01:26:56+08:00 (raw "2026-11-17 01:26:56") expired=3d10h ago
 2026-11-20T12:00:00.000Z [grant] recordId=2714921 grantType=DIRECT available=true usable=true expire=2026-11-21T01:26:56+08:00 (raw "2026-11-21 01:26:56") expiresIn=10h22m
 2026-11-20T12:00:00.000Z [poll] pct=2% windowResetsAt=2026-11-20T19:43:38+06:00 grants(usable)=1 total=2 soonestExpires=2026-11-21T01:26:56+08:00 in=10h22m nextPollIn=60s
@@ -139,7 +139,7 @@ converted (at `GRANT_TZ_OFFSET_MINUTES`) and in local time.
 Consume decisions and results:
 
 ```
-2026-11-20T12:00:15.000Z [use] rule=high-usage consume recordId=2714921 grantType=DIRECT requestId=6f1c... — usage 97% >= THRESHOLD_PCT 97% — consuming soonest-expiring usable grant #2714921
+2026-11-20T12:00:15.000Z [use] rule=high-usage consume recordId=2714921 grantType=DIRECT requestId=6f1c... — usage 93% >= THRESHOLD_PCT 93% — consuming soonest-expiring usable grant #2714921
 2026-11-20T12:00:16.000Z [use] recordId=2714921 requestId=6f1c... consumed (code=200 msg="success")
 2026-11-20T12:00:16.000Z [use] cooldown 90s — rule evaluation paused so the refreshed quota becomes visible
 2026-11-20T12:00:17.000Z [use] post-consume quota pct=0% windowResetsAt=2026-11-20T23:59:59+06:00 — reset verified
