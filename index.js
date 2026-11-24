@@ -6,7 +6,7 @@
  * quota and the "reset quota" grants, and auto-consumes the soonest-expiring
  * usable grant when either rule fires:
  *
- *   1. high-usage:    usage percentage >= THRESHOLD_PCT (default 97)
+ *   1. high-usage:    usage percentage >= THRESHOLD_PCT (default 93)
  *   2. expiring-grant: usage below threshold but the soonest usable grant
  *                      expires within EXPIRING_SOON_SEC (default 120s),
  *                      provided usage >= MIN_USAGE_PCT (default 1)
@@ -33,7 +33,7 @@ const API_BASE = process.env.ZAI_API_BASE || 'https://api.z.ai/api';
 export const DEFAULTS = Object.freeze({
   pollIntervalSec: 60,      // seconds between polls
   expiringSoonSec: 120,     // "expires soon" window for the expiring-grant rule
-  thresholdPct: 97,         // high-usage consume threshold
+  thresholdPct: 93,         // high-usage consume threshold
   minUsagePct: 1,           // below this, the expiring-grant rule is skipped
   grantTzOffsetMinutes: 480,// timezone of grant expireTime strings (UTC+8)
   fetchTimeoutMs: 15000,    // per-request timeout (AbortController)
@@ -596,7 +596,7 @@ Environment (all optional except ZAI_TOKEN; invalid values are a hard error):
   ZAI_TOKEN                 Bearer token (required unless --token is given)
   POLL_INTERVAL_SEC         seconds between polls            (default 60, min 5)
   EXPIRING_SOON_SEC         "expires soon" window in seconds (default 120)
-  THRESHOLD_PCT             high-usage consume threshold, %  (default 97)
+  THRESHOLD_PCT             high-usage consume threshold, %  (default 93)
   MIN_USAGE_PCT             minimum usage for the expiring-grant rule, % (default 1;
                             set 0 for literal spec behavior: consume even at 0% usage)
   GRANT_TZ_OFFSET_MINUTES   offset of grant expireTime strings (default 480 = UTC+8,

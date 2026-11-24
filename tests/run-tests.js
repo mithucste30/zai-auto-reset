@@ -161,9 +161,9 @@ test('decide: multiple usable grants -> picks the SOONEST-expiring one', () => {
   assert.equal(d.grant.recordId, 102);
 });
 
-test('decide: usage >= threshold (exactly 97) triggers high-usage rule', () => {
+test('decide: usage >= threshold (exactly 93) triggers high-usage rule', () => {
   const usable = usableGrants(normalizeGrants({ fiveHourResets: [grant(201, D(3600 * 1000))] }, NOW, 480));
-  const d = decide({ quota: { percentage: 97, nextResetTimeMs: NOW }, usable, nowMs: NOW, config: {} });
+  const d = decide({ quota: { percentage: 93, nextResetTimeMs: NOW }, usable, nowMs: NOW, config: {} });
   assert.equal(d.action, 'consume');
   assert.equal(d.rule, 'high-usage');
   assert.equal(d.grant.recordId, 201);
@@ -178,7 +178,7 @@ test('decide: threshold is configurable (50% fires at 50)', () => {
 
 test('decide: below threshold, grant not expiring -> no action', () => {
   const usable = usableGrants(normalizeGrants({ fiveHourResets: [grant(203, D(3600 * 1000))] }, NOW, 480));
-  const d = decide({ quota: { percentage: 96, nextResetTimeMs: NOW }, usable, nowMs: NOW, config: {} });
+  const d = decide({ quota: { percentage: 92, nextResetTimeMs: NOW }, usable, nowMs: NOW, config: {} });
   assert.equal(d.action, 'none');
   assert.equal(d.kind, 'below-threshold');
 });
